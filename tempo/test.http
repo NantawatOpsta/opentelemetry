@@ -6,3 +6,6 @@ GET http://localhost:8080/error HTTP/1.1
 
 ### GET DATE
 GET http://localhost:8080/datetime HTTP/1.1
+
+### GET EXCHANGE RATE
+GET http://localhost:8080/exchange-rate HTTP/1.1
