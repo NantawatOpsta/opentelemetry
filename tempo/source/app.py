@@ -1,3 +1,4 @@
+import os
 import requests
 
 from flask import Flask
@@ -14,7 +15,7 @@ app = Flask(__name__)
 def home():
     banner.get_hero_banner()
     banner.get_sidebar_banner()
-    requests.get('https://google.com')
+    requests.get(os.environ["API_URL"])
     return "OK"
 
 

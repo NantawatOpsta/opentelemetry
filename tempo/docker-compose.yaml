@@ -60,11 +60,31 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - OTEL_SERVICE_NAME=EXCHANGE
+      - OTEL_SERVICE_NAME=WEB
       - OTEL_TRACES_EXPORTER=otlp,console
       - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      
+      # url to test the trace can be any url don't forget to change the url in the api service
+      - API_URL=http://google.com 
   
+  api:
+    build: .
+    container_name: api
+    command: opentelemetry-instrument flask run -p 8080 --host=0.0.0.0
+    volumes:
+      - ./source:/app
+    ports:
+      - "8081:8080"
+    environment:
+      - OTEL_SERVICE_NAME=API
+      - OTEL_TRACES_EXPORTER=otlp,console
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+
+      # url to test the trace can be any url don't forget to change the url in the api service
+      - API_URL=https://google.com 
+
   otel-collector:
     image: otel/opentelemetry-collector:latest
     volumes:
