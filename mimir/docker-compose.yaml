@@ -32,10 +32,8 @@ services:
     ports:
       - "8080:8080"
     environment:
-      - OTEL_SERVICE_NAME=WEB
-      - OTEL_TRACES_EXPORTER=otlp,console
       - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
-      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+      - OTEL_METRICS_EXPORTER=console      
       
       # url to test the trace can be any url don't forget to change the url in the api service
       - API_URL=http://google.com 
