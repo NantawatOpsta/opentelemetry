@@ -61,7 +61,7 @@ services:
       - "8080:8080"
     environment:
       - OTEL_SERVICE_NAME=EXCHANGE
-      - OTEL_TRACES_EXPORTER=otlp
+      - OTEL_TRACES_EXPORTER=otlp,console
       - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
   

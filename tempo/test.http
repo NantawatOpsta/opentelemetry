@@ -1,5 +1,8 @@
 ### HOME
 GET http://localhost:8080 HTTP/1.1
 
+### ERROR
+GET http://localhost:8080/error HTTP/1.1
+
 ### GET DATE
 GET http://localhost:8080/datetime HTTP/1.1
