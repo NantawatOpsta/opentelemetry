@@ -10,6 +10,11 @@ exporters:
   # NOTE: Prior to v0.86.0 use `logging` instead of `debug`.
   debug:
     verbosity: detailed
+  prometheusremotewrite: # the PRW exporter, to ingest metrics to backend
+    endpoint: http://prometheus:9090
+  prometheus:
+    namespace: otel
+    endpoint: 0.0.0.0:8889
 
 processors:
   batch:
@@ -17,5 +22,5 @@ service:
   pipelines:
     metrics:
       receivers: [otlp]
-      exporters: [otlp]
+      exporters: [prometheus]
       processors: [batch]
