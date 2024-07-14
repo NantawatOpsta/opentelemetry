@@ -1,0 +1,33 @@
+services:
+  
+  web:
+    build: .
+    container_name: web
+    command: opentelemetry-instrument flask run -p 8080 --host=0.0.0.0
+    volumes:
+      - ./source:/app
+    ports:
+      - "8080:8080"
+    environment:
+      - OTEL_SERVICE_NAME=WEB
+      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+
+      - OTEL_TRACES_EXPORTER=none
+      - OTEL_METRICS_EXPORTER=none
+      - OTEL_LOG_EXPORTER=console,otlp
+      
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
+
+  otel-collector:
+    container_name: otel-collector
+    image: otel/opentelemetry-collector:latest
+    volumes:
+      - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
+    ports:
+      - "8888:8888"
+      - "8889:8889"
+    command: ["--config=/etc/otel-collector-config.yaml"]
+
+volumes:
+  mimir-data:
+    driver: local

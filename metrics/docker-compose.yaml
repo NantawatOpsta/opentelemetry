@@ -52,7 +52,3 @@ services:
     command: ["--config=/etc/otel-collector-config.yaml"]
     depends_on:
       - prometheus
-
-volumes:
-  mimir-data:
-    driver: local
