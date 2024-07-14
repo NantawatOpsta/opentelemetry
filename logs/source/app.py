@@ -8,13 +8,13 @@ logger = logging.getLogger(__name__)
 
 @app.route("/")
 def home():
-    logger.info("home page")
+    logger.warning("home page warning")
     return "OK"
 
 
 @app.route("/hello")
 def hello():
-    logger.info("hello page")
+    logger.warning("hello page warning")
     return "Hello, World!"
 
 
