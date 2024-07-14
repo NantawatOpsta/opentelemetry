@@ -75,6 +75,7 @@ services:
       - API_URL=https://google.com 
 
   otel-collector:
+    container_name: otel-collector
     image: otel/opentelemetry-collector:latest
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
