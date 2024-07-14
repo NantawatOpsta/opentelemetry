@@ -1,4 +1,25 @@
 services:
+
+  loki:
+    container_name: loki
+    image: grafana/loki:3.1.0
+    ports:
+      - "3100:3100"
+    command: -config.file=/etc/loki/local-config.yaml
+    volumes:
+      - ./loki-config.yaml:/etc/loki/local-config.yaml
+
+  grafana:
+    image: grafana/grafana:11.0.0
+    volumes:
+      - ./grafana-datasources.yaml:/etc/grafana/provisioning/datasources/datasources.yaml
+    environment:
+      - GF_AUTH_ANONYMOUS_ENABLED=true
+      - GF_AUTH_ANONYMOUS_ORG_ROLE=Admin
+      - GF_AUTH_DISABLE_LOGIN_FORM=true
+      - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor traceQLStreaming metricsSummary
+    ports:
+      - "3000:3000"
   
   web:
     build: .
@@ -14,20 +35,15 @@ services:
 
       - OTEL_TRACES_EXPORTER=none
       - OTEL_METRICS_EXPORTER=none
-      - OTEL_LOG_EXPORTER=console,otlp
+      - OTEL_LOGS_EXPORTER=console,otlp
       
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
 
   otel-collector:
     container_name: otel-collector
-    image: otel/opentelemetry-collector:latest
+    image: otel/opentelemetry-collector-contrib
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
-    ports:
-      - "8888:8888"
-      - "8889:8889"
     command: ["--config=/etc/otel-collector-config.yaml"]
-
-volumes:
-  mimir-data:
-    driver: local
+    depends_on:
+      - loki
