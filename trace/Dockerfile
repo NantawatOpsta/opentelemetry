@@ -1,20 +1,31 @@
-FROM python:3.11
+#FROM maven:3.9.6-eclipse-temurin-17 as build
+#
+#WORKDIR /app
+#COPY ./source .
+#
+#ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.33.4/opentelemetry-javaagent.jar .
+#
+#RUN mvn -v
+#RUN mvn install
+#
+#
+#FROM eclipse-temurin:17-jre-alpine
+#
+#WORKDIR /app
+#
+#COPY --from=build /app/target/*.jar /app/run.jar
+#COPY --from=build /app/opentelemetry-javaagent.jar /app/opentelemetry-javaagent.jar
+#
+#EXPOSE 3077
+#ENTRYPOINT ["java", "-javaagent:/app/opentelemetry-javaagent.jar", "-jar", "/app/run.jar"]
 
-WORKDIR /app
+# HELP: execute mvn clean install in local machine first
+FROM eclipse-temurin:17-jre-alpine
 
-RUN apt update && apt install -y curl 2ping iputils-ping
+WORKDIR /source
 
-# display standard output
-ENV PYTHONUNBUFFERED=1
-# install dependencies
-COPY requirements.txt /app
+COPY ./source/target/*.jar /app/run.jar
+ADD https://github.com/open-telemetry/opentelemetry-java-instrumentation/releases/download/v1.33.4/opentelemetry-javaagent.jar /app
 
-RUN pip3 install -r requirements.txt --no-cache-dir
-RUN pip3 install pylint ipdb
-RUN opentelemetry-bootstrap -a install
-
-RUN adduser vscode
-RUN groupadd docker
-RUN usermod -aG docker vscode
-
-WORKDIR /app
+EXPOSE 3077
+ENTRYPOINT ["java", "-javaagent:/app/opentelemetry-javaagent.jar", "-jar", "/app/run.jar"]

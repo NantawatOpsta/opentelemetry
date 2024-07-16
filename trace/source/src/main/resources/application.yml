@@ -1,0 +1,14 @@
+#####
+# Application
+#####
+server:
+  port: 3077
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: trace
+
+httpservice:
+  endpoint: "${API_URL:https://www.ldblao.la}"

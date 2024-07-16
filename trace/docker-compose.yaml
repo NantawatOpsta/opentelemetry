@@ -10,14 +10,14 @@ services:
       - "10001:10001"
       - "/var/tempo"
     volumes:
-      - tempo-data:/var/tempo
+      - ./tempo-data:/var/tempo
 
   tempo:
     image: *tempoImage
     command: [ "-config.file=/etc/tempo.yaml" ]
     volumes:
       - ./tempo.yaml:/etc/tempo.yaml
-      - tempo-data:/var/tempo
+      - ./tempo-data:/var/tempo
     ports:
       - "14268:14268"  # jaeger ingest
       - "3200:3200"   # tempo
@@ -38,37 +38,35 @@ services:
       - GF_AUTH_DISABLE_LOGIN_FORM=true
       - GF_FEATURE_TOGGLES_ENABLE=traceqlEditor traceQLStreaming metricsSummary
     ports:
-      - "3000:3000"
-  
+      - "3001:3000"
+
   web:
     build: .
     container_name: web
-    command: opentelemetry-instrument flask run -p 8080 --host=0.0.0.0
     volumes:
-      - ./source:/app
+      - ./source:/source
     ports:
-      - "8080:8080"
+      - "8082:3077"
     environment:
       - OTEL_SERVICE_NAME=WEB
       - OTEL_TRACES_EXPORTER=otlp,console
-      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+      - OTEL_JAVAAGENT_ENABLED=true
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
-      
+
       # url to test the trace can be any url don't forget to change the url in the api service
-      - API_URL=http://google.com 
-  
+      - API_URL=http://api:3077/datetime
+
   api:
     build: .
     container_name: api
-    command: opentelemetry-instrument flask run -p 8080 --host=0.0.0.0
     volumes:
-      - ./source:/app
+      - ./source:/source
     ports:
-      - "8081:8080"
+      - "8081:3077"
     environment:
       - OTEL_SERVICE_NAME=API
       - OTEL_TRACES_EXPORTER=otlp,console
-      - OTEL_PYTHON_LOGGING_AUTO_INSTRUMENTATION_ENABLED=true
+      - OTEL_JAVAAGENT_ENABLED=true
       - OTEL_EXPORTER_OTLP_ENDPOINT=http://otel-collector:4317
 
       # url to test the trace can be any url don't forget to change the url in the api service
@@ -80,7 +78,3 @@ services:
     volumes:
       - ./otel-collector-config.yaml:/etc/otel-collector-config.yaml
     command: ["--config=/etc/otel-collector-config.yaml"]
-
-volumes:
-  tempo-data:
-    driver: local
