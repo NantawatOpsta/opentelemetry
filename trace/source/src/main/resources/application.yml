@@ -9,3 +9,6 @@ server:
 spring:
   application:
     name: trace
+
+httpservice:
+  endpoint: "${API_URL:https://www.ldblao.la}"

@@ -57,6 +57,7 @@ public class TraceController {
             userInteractor.handleUserLogin();
             datetimeInteractor.getDatetime();
             ExchangeInteractor.ExchangeRateEntity rate = exchangeInteractor.getExchangeRate();
+
             return ResponseEntity.ok(rate);
         } finally {
             span.end();
