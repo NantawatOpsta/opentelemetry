@@ -1,4 +1,4 @@
 flask
 requests
-opentelemetry-distro
-opentelemetry-exporter-otlp
+opentelemetry-distro==0.46b0
+opentelemetry-exporter-otlp==1.25.0
