@@ -1,4 +1,5 @@
-flask
+Django
+django-prometheus
 requests
 opentelemetry-distro==0.46b0
 opentelemetry-exporter-otlp==1.25.

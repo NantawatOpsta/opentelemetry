@@ -26,7 +26,7 @@ services:
   web:
     build: .
     container_name: web
-    command: opentelemetry-instrument flask run -p 8080 --host=0.0.0.0
+    command: ./manage.py runserver 0.0.0:8080
     volumes:
       - ./source:/app
     ports:

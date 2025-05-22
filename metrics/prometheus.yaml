@@ -12,3 +12,7 @@ scrape_configs:
   - job_name: "service"
     static_configs:
       - targets: ["otel-collector:8889"]
+  - job_name: "web"
+    static_configs:
+      - targets: ["web:8080"]
+    metrics_path: "/metrics"
